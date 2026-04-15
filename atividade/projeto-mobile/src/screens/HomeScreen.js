@@ -1,11 +1,61 @@
-import { View, Text } from 'react-native'; 
+// src/screens/WelcomeScreen.js
 
-const HomeScreen = () => {
-    return ( 
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}> 
-            <Text>Bem-vindo ao aplicativo. Utilize o menu de navegação para acessar as telas de modais e as listas com rolagem</Text> 
-        </View> 
-    ); 
-} 
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { signOut } from 'firebase/auth';
+import { auth } from '../config/firebaseConfig';
 
-export default HomeScreen;
+export default function HomeScreen({ navigation }) {
+  
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      // Remove o usuário da sessão e volta para o Login
+      navigation.replace('Login');
+    }).catch((error) => {
+      console.error(error);
+    });
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Pegamos o email do usuário logado dinamicamente via auth.currentUser */}
+      <Text style={styles.welcomeText}>Bem-vindo!</Text>
+      <Text style={styles.emailText}>{auth.currentUser?.email}</Text>
+      
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        <Text style={styles.buttonText}>Sair</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  welcomeText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  emailText: {
+    fontSize: 18,
+    color: '#666',
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  button: {
+    backgroundColor: '#dc3545', // Cor vermelha para indicar saída
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
