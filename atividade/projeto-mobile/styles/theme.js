@@ -1,0 +1,38 @@
+export default {
+  colors: {
+    primary: '#2196F3',
+    primaryDark: '#1976D2',
+    secondary: '#4CAF50',
+    secondaryDark: '#388E3C',
+    warning: '#FF9800',
+    warningDark: '#F57C00',
+    background: '#f5f5f5',
+    white: '#FFFFFF',
+    black: '#000000',
+    gray: '#666666',
+    lightGray: '#E0E0E0',
+    darkGray: '#333333',
+  },
+  spacing: {
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+  },
+  fontSize: {
+    small: 12,
+    medium: 14,
+    regular: 16,
+    large: 18,
+    xlarge: 20,
+    xxlarge: 24,
+    huge: 32,
+  },
+  borderRadius: {
+    small: 4,
+    medium: 8,
+    large: 12,
+    xlarge: 20,
+  },
+};
