@@ -6,6 +6,7 @@ import {
   Text,
   FlatList,
   StyleSheet,
+  Button,
   ActivityIndicator,
   RefreshControl,
   TouchableOpacity,
@@ -69,6 +70,10 @@ export default function PessoaListScreen({ navigation }) {
         <View>
           <Text style={styles.titulo}>Pessoas</Text>
           <Text style={styles.subtitulo}>{pessoas.length} cadastrada(s)</Text>
+          <Button
+            title="Listar Produtos"
+            onPress={() => navigation.navigate('ProdutoList')}
+          />
         </View>
 
         <TouchableOpacity

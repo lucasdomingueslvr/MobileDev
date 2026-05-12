@@ -11,6 +11,10 @@ import PessoaListScreen from './src/screens/PessoaListScreen'
 import PessoaFormScreen from './src/screens/PessoaFormScreen'
 import PessoaDetailScreen from './src/screens/PessoaDetailScreen'
 
+import ProdutoListScreen from './src/screens/ProdutoListScreen'
+import ProdutoFormScreen from './src/screens/ProdutoFormScreen'
+import ProdutoDetailScreen from './src/screens/ProdutoDetailScreen'
+
 const Stack = createNativeStackNavigator()
 
 export default function App() {
@@ -19,7 +23,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar style="dark" />
         <Stack.Navigator
-          initialRouteName="PessoaList"
+          initialRouteName="ProdutoList"
           screenOptions={{
             headerStyle: {
               backgroundColor: '#ffffff',
@@ -53,8 +57,26 @@ export default function App() {
               title: route.params?.id ? 'Editar Pessoa' : 'Nova Pessoa',
             })}
           />
+          <Stack.Screen
+            name="ProdutoList"
+            component={ProdutoListScreen}
+            options={{ title: 'Lista de Produtos' }}
+          />
+          <Stack.Screen
+            name="ProdutoDetail"
+            component={ProdutoDetailScreen}
+            options={{ title: 'Detalhes' }}
+          />
+          <Stack.Screen
+            name="ProdutoForm"
+            component={ProdutoFormScreen}
+            options={({ route }) => ({
+              title: route.params?.id ? 'Editar Produto' : 'Novo Produto',
+            })}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
+    
   )
 }
