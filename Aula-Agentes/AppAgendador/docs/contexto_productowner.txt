@@ -1,0 +1,74 @@
+Contexto — Agente Product Owner
+Data: 20/05/2026
+
+Arquivos consultados:
+- docs/00_orientacao_agentes.md
+- docs/01_visao_geral.md
+- docs/02_requisitos_e_regras_de_negocio.md
+- docs/09_glossario_dominio.md
+- docs/guia_multiagente-Final.md
+
+Objetivo de negócio:
+Fornecer um app mobile de agendamento que permita criar, gerenciar e lembrar eventos pessoais e corporativos, reduzindo conflitos de agenda e esquecimentos.
+
+Usuários principais:
+- Usuário (cria e gerencia eventos)
+- Participante (recebe convites e confirma presença)
+- Administrador (opcional)
+
+Valor entregue:
+Organização de compromissos, redução de faltas, centralização de agendas e automatização de lembretes.
+
+Visão do produto:
+App leve para gestão de eventos pessoais/corporativos, com criação rápida de eventos, controle de participantes e notificações confiáveis, priorizando UX mobile.
+
+Funcionalidades aprovadas (escopo inicial):
+- Cadastro e login de usuários
+- Criação/edição/exclusão de eventos (título, descrição, data, horário, local)
+- Adição e gerenciamento de participantes (convites, status)
+- Visualização da Agenda (diária, semanal, mensal)
+- Notificações push configuráveis
+- Visualização de detalhes do evento
+
+Prioridades (ordem de implementação):
+1. Autenticação (cadastro/login)
+2. Criação e visualização de eventos na Agenda
+3. Notificações push básicas
+4. Gestão de participantes e convites
+5. Edição/exclusão e regras de permissão
+6. Ajustes UX mobile e confiabilidade
+
+Requisitos funcionais principais (resumo):
+- RF1: Cadastro e login (usuário recebe UID e sessão ativa)
+- RF2: Criar evento (obrigatório: título, data, horário; evento aparece na Agenda)
+- RF3: Editar evento (alterações persistidas e refletidas na Agenda)
+- RF4: Excluir evento (removido da Agenda para todos)
+- RF5: Adicionar participantes (envio de convites; status: pendente/aceito/recusado)
+- RF6: Visualização da Agenda (diário/semanal/mensal com performance aceitável)
+- RF7: Notificações push (entrega conforme configuração; dependente de permissões)
+- RF8: Permissões (somente criador pode editar/excluir)
+
+Regras de negócio (resumo):
+- RN1: Apenas usuários autenticados podem criar/editar/excluir eventos.
+- RN2: Todo evento deve ter título, data e horário.
+- RN3: Somente Criador do evento pode editar ou excluir o evento.
+- RN4: Participantes veem apenas eventos aos quais foram convidados.
+- RN5: Notificações enviadas conforme configuração do evento.
+- RN6: Conflitos de horário: comportamento pendente (decisão humana necessária).
+
+Pontos pendentes / Ambiguidades (necessitam decisão humana):
+- Permitir criação de eventos no passado?
+- Limite de participantes por evento?
+- Eventos públicos vs privados: regras de visibilidade?
+- Regra de sobreposição de eventos (bloquear vs alertar)?
+- Tempo padrão para envio de notificações (ex.: 10 min / 30 min / 24h)?
+- Sincronização em tempo real entre usuários (Firestore realtime ou polling)?
+- Escolha final do backend (Firebase ou API própria)?
+
+Próxima ação sugerida:
+Definir os itens pendentes, priorizando: sobreposição de eventos, tempo padrão de notificações e política de eventos públicos/privados. Após decisão humana, ativar o Agente Arquiteto para consolidar implicações técnicas e gerar orientações para o Agente Designer de API.
+
+Assinatura:
+Agente Product Owner
+20/05/2026
+versão do prompt: 1.0

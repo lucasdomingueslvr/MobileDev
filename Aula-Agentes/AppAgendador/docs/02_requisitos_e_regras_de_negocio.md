@@ -1,21 +1,30 @@
 # Requisitos e regras de negócio
 
 ## 1. Requisitos funcionais
-O sistema deve permitir que o usuário realize cadastro e login na aplicação. 
-Deve possibilitar a criação de eventos com informações como título, descrição, data, horário e local.
-O usuário poderá editar e excluir eventos já criados.
-O sistema deve permitir adicionar participantes aos eventos e visualizar a lista de convidados.
-Deve exibir os eventos em formato de agenda (diária, semanal ou mensal).
-O aplicativo deve enviar notificações push para lembrar os usuários sobre eventos próximos.
-Também deve permitir ao usuário visualizar detalhes completos de cada evento.
+RF1 — Cadastro e login:
+Critério: usuário consegue criar conta e autenticar; após login, recebe UID e sessão ativa.
+RF2 — Criar evento:
+Critério: evento criado aparece na Agenda correspondente (data/horário corretos) e contém título, data e horário.
+RF3 — Editar evento:
+Critério: criador altera campos e mudanças são persistidas e refletidas na Agenda em ≤2s.
+RF4 — Excluir evento:
+Critério: evento removido não aparece mais na Agenda para criador e participantes.
+RF5 — Adicionar participantes:
+Critério: convites enviados; participante vê convite e consegue Confirmar/Recusar; status muda para aceito/recusado/pendente.
+RF6 — Visualização da Agenda:
+Critério: agenda mostra eventos corretos nos modos diário/semanal/mensal, com performance aceitável (<1s para renderizar lista básica).
+RF7 — Notificações push:
+Critério: notificação enviada ao dispositivo do usuário conforme configuração; pelo menos 90% de entrega em testes controlados (dependente de permissões).
+RF8 — Permissões:
+Critério: somente Criador do evento pode editar/excluir seu evento; participantes apenas visualizam eventos aos quais foram convidados.
 
 ## 2. Requisitos não funcionais
-O sistema deve ter bom desempenho, carregando telas e informações rapidamente, mesmo com múltiplos eventos cadastrados.
-Deve garantir segurança dos dados, com autenticação de usuários e proteção de informações sensíveis.
-A aplicação deve ser confiável, evitando perda de dados e falhas durante o uso.
-Deve seguir padrões de desenvolvimento mobile, garantindo compatibilidade com diferentes dispositivos Android (e opcionalmente iOS).
-A interface deve ser intuitiva e de fácil uso.
-O sistema deve ser de fácil manutenção, com código organizado e modular.
+RN1: Apenas usuários autenticados podem criar/editar/excluir eventos.
+RN2: Todo evento deve ter título, data e horário obrigatórios.
+RN3: Somente Criador do evento pode editar ou excluir o evento.
+RN4: Participantes veem apenas eventos nos quais foram convidados.
+RN5: Notificações são enviadas conforme configuração do evento (tempo antes do início).
+RN6: Em caso de conflito de horário, comportamento é PENDENTE (decisão necessária: bloquear criação ou permitir com aviso).
 
 ## 3. Regras de negócio
 Um usuário deve estar autenticado para criar ou gerenciar eventos. 

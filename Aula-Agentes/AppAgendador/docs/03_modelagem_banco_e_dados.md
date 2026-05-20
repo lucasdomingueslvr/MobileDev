@@ -74,7 +74,7 @@ Atualizar documentos conforme evolução do sistema
 Utilizar versionamento no código para mudanças estruturais
 Scripts podem ser usados para atualizar dados existentes, se necessário
 ## 7. Script inicial
-Solicitar que a IA gere o script SQL inicial com tabelas, chaves, índices e restrições.
+Gere a estrutura inicial do banco de dados no Firebase Firestore, definindo as coleções, documentos, campos e relacionamentos necessários para o funcionamento do sistema. A estrutura deve incluir as coleções de usuários, eventos, participantes e notificações, além de exemplos de documentos em JSON. Também deve considerar regras de segurança do Firebase, organização dos dados, padronização dos nomes dos campos, uso de timestamps e estratégias de indexação para consultas mais eficientes.
 
 ## 8. Pedido para o Agente Arquiteto
 Analise a modelagem proposta e indique riscos, melhorias e possíveis simplificações.
