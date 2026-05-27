@@ -56,17 +56,17 @@ Regras de negócio (resumo):
 - RN5: Notificações enviadas conforme configuração do evento.
 - RN6: Conflitos de horário: comportamento pendente (decisão humana necessária).
 
-Pontos pendentes / Ambiguidades (necessitam decisão humana):
-- Permitir criação de eventos no passado?
-- Limite de participantes por evento?
-- Eventos públicos vs privados: regras de visibilidade?
-- Regra de sobreposição de eventos (bloquear vs alertar)?
-- Tempo padrão para envio de notificações (ex.: 10 min / 30 min / 24h)?
-- Sincronização em tempo real entre usuários (Firestore realtime ou polling)?
-- Escolha final do backend (Firebase ou API própria)?
+Decisões tomadas / Regra definida:
+- Não é permitido criar eventos no passado; apenas a data atual ou posterior é aceita.
+- Cada evento possui lista de participantes; a interface deve oferecer ordenação por nome (alfabética) ou por ordem de cadastro no evento.
+- Todos os eventos são privados; somente participantes convidados podem visualizar um evento.
+- Eventos simultâneos são permitidos. Se um novo evento for criado na mesma data e hora de outro existente, o sistema exibe um alerta de sobreposição, mas não bloqueia a criação. Ambos os eventos continuam válidos e recebem notificações.
+- Notificação padrão: primeira notificação 24h antes do evento e segunda notificação 1h antes do evento.
+- A sincronização entre usuários será feita por polling.
+- O backend final escolhido é Firebase.
 
 Próxima ação sugerida:
-Definir os itens pendentes, priorizando: sobreposição de eventos, tempo padrão de notificações e política de eventos públicos/privados. Após decisão humana, ativar o Agente Arquiteto para consolidar implicações técnicas e gerar orientações para o Agente Designer de API.
+Atualizar o Agente Arquiteto e o Agente Designer de API com essas decisões, para que o modelo de dados, as regras de segurança e os fluxos de notificação sejam definidos de acordo com Firebase e polling.
 
 Assinatura:
 Agente Product Owner

@@ -1,0 +1,16 @@
+Data: 27/05/2026
+Arquivo ativo: docs/contexto_productowner.txt
+
+Resumo do contexto:
+- Aplicativo mobile de agendamento de eventos.
+- Backend decidido: Firebase.
+- Sincronização entre usuários: polling.
+- Eventos privados: somente participantes convidados visualizam.
+- Criação de eventos no passado não permitida; apenas data atual ou posterior.
+- Eventos simultâneos são permitidos; cadastro exibe alerta de sobreposição, mas não bloqueia.
+- Notificações padrão: 24h antes e 1h antes do evento.
+- Cada evento tem lista de participantes com ordenação por nome ou por ordem de cadastro.
+
+Decisões mais recentes:
+- Regras finais consolidadas no contexto do Product Owner e nos requisitos.
+- Alinhamento solicitado ao Agente Arquiteto e Agente Designer de API.

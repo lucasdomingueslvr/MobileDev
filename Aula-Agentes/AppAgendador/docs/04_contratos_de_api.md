@@ -1,132 +1,149 @@
-# Contratos de API
+# Contratos de API e acesso
 
 ## 1. Objetivo
-Definir como o aplicativo mobile irá se comunicar com os serviços do Firebase, incluindo autenticação, banco de dados (Firestore) e notificações. O objetivo é padronizar as operações de leitura e escrita de dados, garantindo consistência entre frontend e backend.
+Documentar como o aplicativo mobile interage com o Firebase, incluindo autenticação, Firestore e notificações. O foco é padronizar operações, validações e regras de acesso para o backend Firebase.
 
 ## 2. Padrão de versionamento
-Como será utilizado Firebase diretamente (sem API REST própria), não haverá versionamento por URL como /api/v1.
-
-O versionamento será controlado por:
-
-Versão do aplicativo mobile
-Estrutura das coleções no Firestore
-Versionamento do código no repositório
+Não há versionamento por URL, pois o aplicativo usa Firebase diretamente. O controle de compatibilidade é feito por:
+- versão do app mobile
+- esquema de coleções e campos no Firestore
+- versionamento do código-fonte
 
 ## 3. Autenticação e autorização
-Autenticação será feita via Firebase Authentication
-Métodos:
-Email e senha
-Após login, o usuário recebe um token JWT gerenciado pelo Firebase
-Autorização será feita através de:
-Firebase Security Rules, controlando acesso às coleções
+Autenticação: Firebase Authentication via email e senha.
+Após login, o usuário recebe token JWT do Firebase.
+Autorização: Firebase Security Rules determinam permissões de leitura e escrita.
 
-Exemplo de regra:
+Regras esperadas:
+- usuário autenticado pode criar eventos com `criadorId == request.auth.uid`
+- somente o criador pode atualizar ou excluir seu evento
+- somente o criador pode adicionar participantes ao evento
+- participante pode ler evento se estiver em `/eventos/{eventoId}/participantes/{uid}`
+- participante pode atualizar apenas seu próprio `status`
+- notificações só podem ser lidas pelo `usuarioId` correspondente
 
-Usuário só pode editar eventos que criou
-Participantes só podem visualizar eventos em que estão incluídos
-## 4. Endpoints
-Como não há endpoints REST tradicionais, as operações são:
+## 4. Operações Firestore principais
+Como não há endpoints REST tradicionais, as operações são realizadas diretamente em coleções e documentos Firestore.
 
-1. Autenticação
-Criar usuário
-Login
-Logout
-2. Usuários
-Buscar dados do usuário logado
-3. Eventos
-Criar evento
-Listar eventos
-Atualizar evento
-Deletar evento
-4. Participantes
-Adicionar participante
-Atualizar status (aceito/recusado)
-Listar participantes
-5. Notificações
-Enviar notificação (via Firebase Cloud Messaging)
+### Autenticação
+- criar usuário
+- login
+- logout
+- obter token JWT
 
-## 5. Requisição e resposta com exemplos JSON reais
+### Eventos
+- criar evento: gravar documento em `/eventos/{eventoId}`
+- listar eventos: consultar eventos em que o usuário é participante ou criador
+- atualizar evento: alterar documento em `/eventos/{eventoId}`
+- deletar evento: remover documento `/eventos/{eventoId}` e subcoleções de participantes
 
-Criar evento
+### Participantes
+- adicionar participante: criar documento em `/eventos/{eventoId}/participantes/{uid}`
+- atualizar status: atualizar campo `status` no documento do participante
+- listar participantes: consultar subcoleção `/eventos/{eventoId}/participantes`
 
-Requisição (Firestore):
+### Notificações
+- criar/atualizar notificação: gravar documento em `/notificacoes/{notificacaoId}` via Cloud Function
+- listar notificações: consultar `/notificacoes` com `usuarioId == uid`
+- enviar push: serviço backend usa Firebase Cloud Messaging
 
+## 5. Formato de dados e validações
+### Evento
+Campos obrigatórios:
+- titulo: string
+- descricao: string
+- local: string
+- criadorId: string
+- dataHoraInicio: Timestamp Firestore
+- criadoEm: Timestamp
+- atualizadoEm: Timestamp
+- notificacoesPadrao.habilitado: boolean
+- notificacoesPadrao.agendamentos: array de números (segundos antes do evento)
+
+Validações principais:
+- `dataHoraInicio` não pode ser no passado
+- `criadorId` deve ser igual a `request.auth.uid` na criação
+- `titulo` não pode ser vazio
+- eventos são privados por padrão
+
+### Participante
+Campos obrigatórios:
+- usuarioId: string
+- nome: string
+- status: string (`pendente`, `aceito`, `recusado`)
+- convidadoPor: string
+- convidadoEm: Timestamp
+
+### Notificação
+Campos obrigatórios:
+- usuarioId: string
+- eventoId: string
+- tipo: string (`convite`, `lembrete`)
+- mensagem: string
+- agendadoPara: Timestamp
+- status: string (`pendente`, `enviado`, `falha`)
+- criadoEm: Timestamp
+
+## 6. Exemplo de operações JSON
+### Criar evento
 {
-  "titulo": "Reunião",
-  "descricao": "Discussão do projeto",
-  "data": "2026-05-01",
-  "horario": "10:00",
-  "local": "Online",
-  "criadorId": "uid_usuario"
-}
-
-Resposta:
-
-{
-  "id": "evento_id_gerado",
-  "status": "sucesso"
-}
-Listar eventos do usuário
-
-Resposta:
-
-[
-  {
-    "id": "evento1",
-    "titulo": "Reunião",
-    "data": "2026-05-01",
-    "horario": "10:00"
-  },
-  {
-    "id": "evento2",
-    "titulo": "Aniversário",
-    "data": "2026-05-03",
-    "horario": "19:00"
+  "titulo": "Reunião de Projeto",
+  "descricao": "Alinhamento semanal",
+  "local": "Sala 2",
+  "criadorId": "uid_usuario",
+  "dataHoraInicio": Timestamp,
+  "criadoEm": Timestamp,
+  "atualizadoEm": Timestamp,
+  "notificacoesPadrao": {
+    "habilitado": true,
+    "agendamentos": [86400, 3600]
   }
-]
-Adicionar participante
+}
 
-Requisição:
-
+### Adicionar participante
 {
   "usuarioId": "uid_participante",
   "nome": "Maria",
-  "status": "pendente"
+  "status": "pendente",
+  "convidadoPor": "uid_usuario",
+  "convidadoEm": Timestamp
 }
-Atualizar status do participante
 
-Requisição:
-
+### Criar notificação
 {
-  "status": "aceito"
+  "usuarioId": "uid_participante",
+  "eventoId": "evento_id",
+  "tipo": "convite",
+  "mensagem": "Você foi convidado para Reunião de Projeto.",
+  "agendadoPara": Timestamp,
+  "status": "pendente",
+  "criadoEm": Timestamp
 }
 
-## 6. Erros esperados
-Mesmo sem API REST, os erros seguem padrões do Firebase:
+## 7. Sincronização e polling
+Como a sincronização entre usuários será feita por polling:
+- o app consulta eventos a cada intervalo configurado (ex.: 30 segundos a 2 minutos, conforme criticidade e custo de leitura)
+- consultas filtram eventos relevantes por `participantes.usuarioId == uid` ou `criadorId == uid`
+- usar `updatedAt` para identificar itens alterados desde o último polling
+- consultar eventos dentro de janelas de data para evitar leituras excessivas
 
-permission-denied → usuário sem permissão
-not-found → documento não encontrado
-invalid-argument → dados inválidos
-unauthenticated → usuário não logado
+## 8. Fluxo de notificações push
+1. O app grava evento e participantes em Firestore.
+2. Cloud Function detecta o evento criado/atualizado e gera notificações de lembrete e convite em `/notificacoes`.
+3. Um Cloud Function agendado varre notificações pendentes e envia push via Firebase Cloud Messaging no momento certo.
+4. Após envio, a notificação recebe `enviadoEm` e `status: enviado`.
+5. Em caso de erro, o registro recebe `status: falha` para possível retentativa.
 
-Exemplo:
+## 9. Erros esperados
+Erros seguem padrão Firebase:
+- permission-denied: acesso negado pelas regras
+- not-found: documento inexistente
+- invalid-argument: dados inválidos ou campo ausente
+- unauthenticated: usuário não logado
 
-{
-  "erro": "permission-denied",
-  "mensagem": "Usuário não autorizado a acessar este evento"
-}
+## 10. Segurança de acesso
+A autorização é garantida por Firebase Security Rules, não por roteamento REST.
+As regras devem impedir acesso a eventos privados fora do conjunto de participantes e garantir que apenas o criador possa alterar o evento e adicionar participantes.
 
-## 7. Regras de contrato
-Campos obrigatórios:
-Evento: titulo, data, horario, criadorId
-Datas devem estar em formato DD-MM-YYYY
-Horários no formato HH:mm
-IDs devem ser strings geradas pelo Firebase
-Status de participante:
-pendente
-aceito
-recusado
-Todos os acessos devem respeitar as regras de segurança do Firebase
-
-## 8. Pedido para o Agente Designer de API
-Documente o contrato completo e destaque qualquer ponto ambíguo que precise de validação antes do desenvolvimento.
+## 11. Pedido para o Agente Designer de API
+Documente o esquema Firestore definitivo e as consultas de polling necessárias para sincronização de agenda, incluindo: `eventos` por participação, `participantes` por evento, e `notificacoes` por usuário.

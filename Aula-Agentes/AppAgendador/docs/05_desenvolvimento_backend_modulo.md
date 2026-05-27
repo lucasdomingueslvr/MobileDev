@@ -30,10 +30,16 @@ Exemplo de estrutura do evento:
 {
   "titulo": "Reunião",
   "descricao": "Discussão",
-  "data": "2026-05-01",
-  "horario": "10:00",
   "local": "Online",
-  "criadorId": "uid_usuario"
+  "criadorId": "uid_usuario",
+  "dataHoraInicio": Timestamp,
+  "dataHoraFim": Timestamp?,
+  "criadoEm": Timestamp,
+  "atualizadoEm": Timestamp,
+  "notificacoesPadrao": {
+    "habilitado": true,
+    "agendamentos": [86400, 3600]
+  }
 }
 
 ## 4. O que deve ser gerado
@@ -51,7 +57,7 @@ Testes manuais no app:
 Criar evento
 Editar evento
 Excluir evento
-Verificar sincronização em tempo real
+Verificar sincronização por polling
 
 ## 6. Critérios de aceite
 Usuário autenticado consegue criar evento
