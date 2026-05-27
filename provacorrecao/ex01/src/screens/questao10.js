@@ -1,0 +1,54 @@
+import React from 'react';
+import { View, Text, Button } from 'react-native';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
+
+function HomeScreen({ navigation }) {
+    return (
+        <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>
+            <Text>Home Screen</Text>
+
+            <Button
+                title="Ir para Details"
+                onPress={() => navigation.navigate('Details')}
+            />
+        </View>
+    );
+}
+
+function DetailsScreen() {
+    return (
+        <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>
+            <Text>Details Screen</Text>
+        </View>
+    );
+}
+
+export default function Questao10() {
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name="Home"
+                    component={HomeScreen}
+                />
+
+                <Stack.Screen
+                    name="Details"
+                    component={DetailsScreen}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+}
